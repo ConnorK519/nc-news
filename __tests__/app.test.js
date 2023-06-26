@@ -24,4 +24,7 @@ describe("GET /api/topics", () => {
         });
       });
   });
+  it("400: should respond with a bad request message when passed a path that does not exist", () => {
+    return request(app).get("/api/PowerWolf").expect(404);
+  });
 });
