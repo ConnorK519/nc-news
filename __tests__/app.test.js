@@ -45,6 +45,29 @@ describe("GET /api/", () => {
   });
 });
 
+describe("GET /api/articles", () => {
+  it("200: should respond with an array of all articles in descending order by date", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSorted("created_at", { descending: true });
+        expect(articles).toHaveLength(13);
+        articles.forEach((article) => {
+          expect(article).not.toHaveProperty("body");
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("comment_count");
+        });
+      });
+  });
+});
 describe("GET /api/articles/:article_id", () => {
   it("200: should respond with an article with the correct id and all expected properties", () => {
     return request(app)
