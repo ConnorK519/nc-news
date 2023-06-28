@@ -52,7 +52,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toBeSorted("created_at", { descending: true });
+        expect(articles).toBeSortedBy("created_at", { descending: true });
         expect(articles).toHaveLength(13);
         articles.forEach((article) => {
           expect(article).not.toHaveProperty("body");
@@ -107,6 +107,53 @@ describe("GET /api/articles/:article_id", () => {
   });
 });
 
+describe("GET /api/articles/:article_id/comments", () => {
+  it("200: should respond with an array of comment objects that all have a author_id that corresponds to passed parametric endpoint", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toHaveLength(11);
+        expect(comments).toBeSortedBy("created_at", { ascending: true });
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+          expect(comment.article_id).toBe(1);
+        });
+      });
+  });
+  it("404: should respond with an error 404 when passed a article id that does not exist", () => {
+    return request(app)
+      .get("/api/articles/100000/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("400: should respond with an error 400 if passed anything other than a number", () => {
+    return request(app)
+      .get("/api/articles/:article_id/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("200: should return an empty array if there are no comments for the passed article", () => {
+    return request(app)
+      .get("/api/articles/4/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toHaveLength(0);
+      });
+  });
+});
+
 describe("GET /api/users", () => {
   it("200: should respond with an array of users", () => {
     return request(app)
@@ -120,6 +167,49 @@ describe("GET /api/users", () => {
           expect(user).toHaveProperty("name");
           expect(user).toHaveProperty("avatar_url");
         });
+      });
+  });
+});
+
+describe("Testing for the handleFalsePath function", () => {
+  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
+    return request(app)
+      .get("/api/potatoes")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
+    return request(app)
+      .get("/api/articles/4/cabbage")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
+    return request(app)
+      .get("/api/users/tomato")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
+    return request(app)
+      .get("/api/topics/turtles")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
+    return request(app)
+      .get("/api/articles/4/comments/weather")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
       });
   });
 });
