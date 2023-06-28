@@ -4,6 +4,8 @@ const { getTopics } = require("./controllers/topics.controllers");
 
 const { getApiInfo } = require("./controllers/api.controllers");
 
+const { getUsers } = require("./controllers/users.controllers");
+
 const {
   getArticles,
   getArticleById,
@@ -31,6 +33,8 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.get("/api/users", getUsers);
 
 app.get("*", handleFalseEndpoints);
 
