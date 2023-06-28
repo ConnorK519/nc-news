@@ -106,3 +106,33 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id/comments", () => {
+  it("200: should respond with an array of comment objects that all have a author_id that corresponds to passed parametric endpoint", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toHaveLength(11);
+        expect(comments).toBeSorted("created_at", { ascending: true });
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+          expect(comment.article_id).toBe(1);
+        });
+      });
+  });
+  it("404: should respond with an error 404 when passed a article id that does not exist", () => {
+    return request(app)
+      .get("/api/articles/100000/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});

@@ -29,5 +29,9 @@
   "GET /api/articles/:article_id": {
     "description": "serves an article that has the corresponding article id that was passed",
     "params": "It takes any number. If the number is not the id number of an article it responds with a error 404"
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "responds with an array of comments for the article with the passed id",
+    "params": "It takes any number. If the number is not the id number of an article it responds with a error 404"
   }
 }
