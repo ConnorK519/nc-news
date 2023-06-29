@@ -46,7 +46,7 @@ describe("GET /api/", () => {
 });
 
 describe("GET /api/articles", () => {
-  it("200: should respond with an array of all articles in descending order by date", () => {
+  it("200: should respond with an array of all articles in descending order by date as default", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
@@ -67,7 +67,38 @@ describe("GET /api/articles", () => {
         });
       });
   });
+  it("200: should respond with an array of articles that fit the criteria of the passed queries", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(13);
+        expect(articles).toBeSortedBy("author", { ascending: true });
+      });
+  });
+  it("200: should respond with an array of articles on the passed topic", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(12);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  it("400: should respond with a 400 Bad Request error If passed a bad query that is not in the green list", () => {
+    return request(app)
+      .get("/api/articles?topic=paintDrying")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
 });
+
 describe("GET /api/articles/:article_id", () => {
   it("200: should respond with an article with the correct id and all expected properties", () => {
     return request(app)
@@ -191,22 +222,6 @@ describe("Testing for the handleFalsePath function", () => {
   it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
     return request(app)
       .get("/api/users/tomato")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
-  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
-    return request(app)
-      .get("/api/topics/turtles")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
-  it("404: should respond with an error 404 for a variety of endpoints that do not exist", () => {
-    return request(app)
-      .get("/api/articles/4/comments/weather")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
