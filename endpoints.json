@@ -10,8 +10,20 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all topics sorted by date in ascending order by default if not passed a query",
+    "queries": {
+      "topic": ["coding", "football", "cooking"],
+      "sort_by": [
+        "author",
+        "title",
+        "id",
+        "topic",
+        "date",
+        "votes",
+        "comment_count"
+      ],
+      "order": ["ASC", "DESC"]
+    },
     "exampleResponse": {
       "articles": [
         {
@@ -33,5 +45,8 @@
   "GET /api/articles/:article_id/comments": {
     "description": "responds with an array of comments for the article with the passed id",
     "params": "It takes any number. If the number is not the id number of an article it responds with a error 404"
+  },
+  "GET /api/users": {
+    "description": "responds with an array of users objects"
   }
 }

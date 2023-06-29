@@ -18,7 +18,6 @@ exports.selectArticles = (
     "topic",
     "articles.created_at",
     "articles.votes",
-    "article_img_url",
     "comment_count",
     "DESC",
     "ASC",
@@ -32,8 +31,6 @@ exports.selectArticles = (
     sort_by = validQueries[4];
   } else if (sort_by === "votes") {
     sort_by = validQueries[5];
-  } else if (sort_by === "img_url") {
-    sort_by = validQueries[6];
   }
 
   const validTopics = ["mitch", "cats", "coding", "football", "cooking", null];
