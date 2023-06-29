@@ -33,7 +33,15 @@ exports.selectArticles = (
     sort_by = validQueries[5];
   }
 
-  const validTopics = ["mitch", "cats", "coding", "football", "cooking", null];
+  const validTopics = [
+    "mitch",
+    "cats",
+    "coding",
+    "football",
+    "cooking",
+    "paper",
+    null,
+  ];
 
   if (!validTopics.includes(topic)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });

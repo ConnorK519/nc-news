@@ -97,6 +97,31 @@ describe("GET /api/articles", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
+  it("400: should respond with a 400 Bad Request error If passed a bad query that is not in the green list", () => {
+    return request(app)
+      .get("/api/articles?sort_by=length")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("400: should respond with a 400 Bad Request error If passed a bad query that is not in the green list", () => {
+    return request(app)
+      .get("/api/articles?order=age")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("200: should respond with an empty array, and a status 200 if passed a valid topic that hasn't got an article", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(0);
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id", () => {
