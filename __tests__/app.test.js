@@ -130,6 +130,8 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/2")
       .expect(200)
       .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("comment_count");
         expect(body).toMatchObject({
           article: {
             article_id: 2,
@@ -141,6 +143,7 @@ describe("GET /api/articles/:article_id", () => {
             votes: 0,
             article_img_url:
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: "0",
           },
         });
       });
@@ -159,6 +162,16 @@ describe("GET /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("200: should respond with a article that has a comment_count key with a number of comments for that article", () => {
+    return request(app)
+      .get("/api/articles/5")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("comment_count");
+        expect(article.comment_count).toBe("2");
       });
   });
 });
