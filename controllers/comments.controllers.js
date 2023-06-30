@@ -1,7 +1,7 @@
 const {
   selectCommentsByArticleId,
-  prepComment,
   insertComment,
+  deleteComment,
 } = require("../models/comments.models");
 const { checkArticleExists } = require("../models/articles.models");
 
@@ -28,6 +28,15 @@ exports.postCommentByArticleId = (req, res, next) => {
   return insertComment([article_id, author, body])
     .then((createdComment) => {
       res.status(201).send({ createdComment });
+    })
+    .catch(next);
+};
+
+exports.deleteCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+  return deleteComment(comment_id)
+    .then((deletedComment) => {
+      res.status(204).send({ msg: "No Content" });
     })
     .catch(next);
 };

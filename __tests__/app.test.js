@@ -351,3 +351,15 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("204: should respond with a code 204 and a message of no content and the deleted comment", () => {
+    return request(app).delete("/api/comments/2").expect(204);
+  });
+  it("404: should respond with an error 404 if the comment id is not found", () => {
+    return request(app).delete("/api/comments/459868").expect(404);
+  });
+  it("400: should respond with an error 400 if passed a value that isn't a number", () => {
+    return request(app).delete("/api/comments/thisIsNaN").expect(400);
+  });
+});
