@@ -253,3 +253,47 @@ describe("Testing for the handleFalsePath function", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("201: should successfully post a comment then respond with the comment and a status 201", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({
+        author: "butter_bridge",
+        body: "I've gotta be honest I'm clueless about how to test this.",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const { createdComment } = body;
+        expect(createdComment.author).toBe("butter_bridge");
+        expect(createdComment.body).toBe(
+          "I've gotta be honest I'm clueless about how to test this."
+        );
+        expect(createdComment.article_id).toBe(2);
+        expect(Object.keys(createdComment).length).toBe(6);
+      });
+  });
+  it("404: responds with a 404 if the user does not exist", () => {
+    return request(app)
+      .post("/api/articles/5/comments")
+      .send({
+        author: "None_existent_user",
+        body: "Wow I actually managed to get the request right!",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("422: should respond with an unprocessable entity error when passed an incomplete request", () => {
+    return request(app)
+      .post("/api/articles/5/comments")
+      .send({
+        author: "butter_bridge",
+      })
+      .expect(422)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Unprocessable Entity");
+      });
+  });
+});

@@ -16,3 +16,15 @@ exports.selectCommentsByArticleId = (article_id) => {
       return rows;
     });
 };
+
+exports.prepComment = (comment) => {
+  return db
+    .query(
+      format(`INSERT INTO comments (article_id, author, body)
+  VALUES ($1, $2, $3) RETURNING *`),
+      comment
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
