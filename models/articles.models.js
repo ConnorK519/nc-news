@@ -78,7 +78,14 @@ exports.selectArticles = (
 
 exports.selectArticleById = (article_id) => {
   return db
-    .query(format(`SELECT * FROM articles WHERE article_id = $1`), [article_id])
+    .query(
+      format(`SELECT articles.*, COUNT(comment_id) AS comment_count
+    FROM articles 
+    LEFT JOIN comments ON comments.article_id = articles.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id`),
+      [article_id]
+    )
     .then(({ rows }) => {
       if (rows.length > 0) {
         return rows[0];
