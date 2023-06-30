@@ -363,3 +363,64 @@ describe("DELETE /api/comments/:comment_id", () => {
     return request(app).delete("/api/comments/thisIsNaN").expect(400);
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  it("200: should respond with the updated row when passed a regular number", () => {
+    return request(app)
+      .patch("/api/articles/6")
+      .send({ votes: 3 })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 6,
+          title: "A",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "Delicious tin of cat food",
+          created_at: "2020-10-18T01:00:00.000Z",
+          votes: 3,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  it("200: should respond with the updated row when passed a negative number ", () => {
+    return request(app)
+      .patch("/api/articles/6")
+      .send({ votes: -3 })
+      .expect(200)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 6,
+          title: "A",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "Delicious tin of cat food",
+          created_at: "2020-10-18T01:00:00.000Z",
+          votes: -3,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  it("400: should respond with an error 400 when passed an invalid vote value", () => {
+    return request(app)
+      .patch("/api/articles/6")
+      .send({ votes: "hello" })
+      .expect(400);
+  });
+  it("404: should respond with an error 404 when passed an article id that doesn't exist", () => {
+    return request(app)
+      .patch("/api/articles/3948689")
+      .send({ votes: 4 })
+      .expect(404);
+  });
+  it("400: should respond with an error 400 when passed an invalid article id", () => {
+    return request(app)
+      .patch("/api/articles/giveMOREvotes")
+      .send({ votes: 4 })
+      .expect(400);
+  });
+});
