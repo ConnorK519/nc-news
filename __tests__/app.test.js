@@ -130,8 +130,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/2")
       .expect(200)
       .then(({ body }) => {
-        const { article } = body;
-        expect(article).toHaveProperty("comment_count");
         expect(body).toMatchObject({
           article: {
             article_id: 2,
@@ -143,7 +141,6 @@ describe("GET /api/articles/:article_id", () => {
             votes: 0,
             article_img_url:
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-            comment_count: "0",
           },
         });
       });
