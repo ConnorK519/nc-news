@@ -9,6 +9,7 @@ const { getUsers } = require("./controllers/users.controllers");
 const {
   getArticles,
   getArticleById,
+  patchArticleById,
 } = require("./controllers/articles.controllers");
 
 const {
@@ -39,6 +40,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.patch("/api/articles/:article_id", patchArticleById);
 
 app.delete("/api/comments/:comment_id", deleteCommentById);
 

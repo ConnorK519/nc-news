@@ -363,3 +363,26 @@ describe("DELETE /api/comments/:comment_id", () => {
     return request(app).delete("/api/comments/thisIsNaN").expect(400);
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  it("202: should respond with the updated row", () => {
+    return request(app)
+      .patch("/api/articles/6")
+      .send({ votes: 3 })
+      .expect(202)
+      .then(({ body }) => {
+        const { updatedArticle } = body;
+        expect(updatedArticle).toMatchObject({
+          article_id: 6,
+          title: "A",
+          topic: "mitch",
+          author: "icellusedkars",
+          body: "Delicious tin of cat food",
+          created_at: "2020-10-18T01:00:00.000Z",
+          votes: 3,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+});

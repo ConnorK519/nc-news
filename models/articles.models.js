@@ -104,3 +104,23 @@ exports.checkArticleExists = (article_id) => {
       }
     });
 };
+
+exports.patchArticle = (votes, article_id) => {
+  return db
+    .query(
+      format(`
+  UPDATE articles 
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *
+  `),
+      [votes, article_id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 1) {
+        return rows[0];
+      } else {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+    });
+};
