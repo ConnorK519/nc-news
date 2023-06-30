@@ -295,15 +295,59 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  it("422: should respond with an unprocessable entity error when passed an incomplete request", () => {
+  it("400: should respond with an Bad Request error when passed an incomplete request", () => {
     return request(app)
       .post("/api/articles/5/comments")
       .send({
         author: "butter_bridge",
       })
-      .expect(422)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Unprocessable Entity");
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("404: should respond with a error 404 when passed an id that doesn't exist", () => {
+    return request(app)
+      .post("/api/articles/2754474/comments")
+      .send({
+        author: "butter_bridge",
+        body: "I've gotta be honest I'm clueless about how to test this.",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  it("400: should respond with a error 400 bad request when passed an invalid id type", () => {
+    return request(app)
+      .post("/api/articles/notAnId/comments")
+      .send({
+        author: "butter_bridge",
+        body: "I've gotta be honest I'm clueless about how to test this.",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("201: creates the comment only using the relevant data from the post", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({
+        author: "butter_bridge",
+        body: "I've gotta be honest I'm clueless about how to test this.",
+        votes: 28,
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const { createdComment } = body;
+        expect(createdComment.votes).not.toBe(28);
+        expect(createdComment.author).toBe("butter_bridge");
+        expect(createdComment.body).toBe(
+          "I've gotta be honest I'm clueless about how to test this."
+        );
+        expect(createdComment.article_id).toBe(2);
+        expect(Object.keys(createdComment).length).toBe(6);
       });
   });
 });

@@ -17,7 +17,7 @@ exports.selectCommentsByArticleId = (article_id) => {
     });
 };
 
-exports.prepComment = (comment) => {
+exports.insertComment = (comment) => {
   return db
     .query(
       format(`INSERT INTO comments (article_id, author, body)

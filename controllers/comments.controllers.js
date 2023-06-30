@@ -1,6 +1,7 @@
 const {
   selectCommentsByArticleId,
   prepComment,
+  insertComment,
 } = require("../models/comments.models");
 const { checkArticleExists } = require("../models/articles.models");
 
@@ -24,8 +25,9 @@ exports.getCommentsByArticleId = (req, res, next) => {
 exports.postCommentByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const { author, body } = req.body;
-  return prepComment([article_id, author, body]).then((createdComment) => {
-    res.status(201).send({createdComment})
-  })
-  .catch(next)
+  return insertComment([article_id, author, body])
+    .then((createdComment) => {
+      res.status(201).send({ createdComment });
+    })
+    .catch(next);
 };
