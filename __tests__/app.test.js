@@ -161,6 +161,16 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
+  it("200: should respond with a article that has a comment_count key with a number of comments for that article", () => {
+    return request(app)
+      .get("/api/articles/5")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toHaveProperty("comment_count");
+        expect(article.comment_count).toBe("2");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
