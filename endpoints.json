@@ -2,6 +2,9 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+  "GET /api/users": {
+    "description": "responds with an array of users objects"
+  },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
@@ -40,13 +43,30 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves an article that has the corresponding article id that was passed",
-    "params": "It takes any number. If the number is not the id number of an article it responds with a error 404"
+    "params": "It takes any number. If the number is not the id number of an article it responds with a error 404 not found",
+    "example endpoint": "/api/articles/7"
   },
+  "PATCH /api/articles/:article_id": {
+    "description": "this endpoint is used to increase or decrease the number of votes on an article.",
+    "example endpoint": "/api/articles/5",
+    "Input format": "it takes an object formatted as such: { votes: 3 } this would add 3 votes"
+  },
+
   "GET /api/articles/:article_id/comments": {
     "description": "responds with an array of comments for the article with the passed id",
-    "params": "It takes any number. If the number is not the id number of an article it responds with a error 404"
+    "params": "It takes any number. If the number is not the id number of an article it responds with a error 404",
+    "example endpoint": "/api/articles/2/comments"
   },
-  "GET /api/users": {
-    "description": "responds with an array of users objects"
+  "POST /api/articles/:article_id/comments": {
+    "description": "this endpoint is used to make a comment on an article based on the passed article id",
+    "example endpoint": "/api/articles/3/comments",
+    "example comment": {
+      "author": "valid username",
+      "body": "this is where the comment goes"
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "this endpoint deletes a comment by it's id",
+    "example endpoint": "/api/comments/6"
   }
 }
