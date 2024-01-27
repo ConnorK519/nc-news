@@ -25,12 +25,12 @@ exports.selectArticles = (
 
   if (sort_by === "author") {
     sort_by = validQueries[0];
-  } else if (sort_by === "id") {
-    sort_by = validQueries[2];
   } else if (sort_by === "date") {
     sort_by = validQueries[4];
   } else if (sort_by === "votes") {
     sort_by = validQueries[5];
+  } else if (sort_by === "comments") {
+    sort_by = validQueries[6];
   }
 
   const validTopics = [
