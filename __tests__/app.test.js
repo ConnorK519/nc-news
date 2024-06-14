@@ -181,7 +181,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         const { comments } = body;
         expect(comments).toHaveLength(11);
-        expect(comments).toBeSortedBy("created_at", { ascending: true });
+        expect(comments).toBeSortedBy("created_at", { descending: true });
         comments.forEach((comment) => {
           expect(comment).toHaveProperty("comment_id");
           expect(comment).toHaveProperty("votes");
