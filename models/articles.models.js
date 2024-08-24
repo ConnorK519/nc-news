@@ -52,7 +52,11 @@ exports.selectArticles = (
   query += `GROUP BY articles.article_id `;
 
   if (sort_by) {
-    query += `ORDER BY articles.${sort_by} `;
+    if (sort_by == "comment_count") {
+      query += `ORDER BY ${sort_by} `;
+    } else {
+      query += `ORDER BY articles.${sort_by} `;
+    }
   }
 
   if (order) {
