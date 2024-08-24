@@ -3,7 +3,7 @@ const format = require("pg-format");
 
 exports.selectArticles = (
   topic = null,
-  sort_by = "articles.created_at",
+  sort_by = "created_at",
   order = "DESC"
 ) => {
   let query = `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) AS comment_count
@@ -12,26 +12,16 @@ exports.selectArticles = (
   `;
 
   const validQueries = [
-    "articles.author",
+    "author",
     "title",
-    "articles.article_id",
+    "article_id",
     "topic",
-    "articles.created_at",
-    "articles.votes",
+    "created_at",
+    "votes",
     "comment_count",
     "DESC",
     "ASC",
   ];
-
-  if (sort_by === "author") {
-    sort_by = validQueries[0];
-  } else if (sort_by === "date") {
-    sort_by = validQueries[4];
-  } else if (sort_by === "votes") {
-    sort_by = validQueries[5];
-  } else if (sort_by === "comments") {
-    sort_by = validQueries[6];
-  }
 
   const validTopics = [
     "mitch",
@@ -62,7 +52,7 @@ exports.selectArticles = (
   query += `GROUP BY articles.article_id `;
 
   if (sort_by) {
-    query += `ORDER BY ${sort_by} `;
+    query += `ORDER BY articles.${sort_by} `;
   }
 
   if (order) {

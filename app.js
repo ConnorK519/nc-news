@@ -24,7 +24,7 @@ const {
   handleCustomErrors,
   handleServerErrors,
   handleFalseEndpoints,
-} = require("./errors/error-handling");
+} = require("./middleware/error-handling");
 
 const app = express();
 
