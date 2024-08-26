@@ -4,11 +4,13 @@ const format = require("pg-format");
 exports.selectArticles = (
   topic = null,
   sort_by = "created_at",
-  order = "DESC"
+  order = "DESC",
+  limit,
+  offset
 ) => {
-  let query = `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) AS comment_count
+  let query = `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) AS comment_count, CEIL(COUNT(articles.article_id) / ${limit}) AS total_pages
   FROM articles 
-  LEFT JOIN comments ON comments.article_id = articles.article_id 
+  LEFT JOIN comments ON comments.article_id = articles.article_id
   `;
 
   const validQueries = [
@@ -62,6 +64,9 @@ exports.selectArticles = (
   if (order) {
     query += `${order}`;
   }
+
+  query += ` LIMIT ${limit}
+  OFFSET ${offset}`;
 
   return db.query(query).then(({ rows }) => {
     if (rows.length === 1) {

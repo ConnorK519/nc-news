@@ -6,7 +6,8 @@ const {
 
 exports.getArticles = (req, res, next) => {
   const { topic, sort_by, order } = req.query;
-  return selectArticles(topic, sort_by, order)
+  const { limit, offset } = req.pagination;
+  return selectArticles(topic, sort_by, order, limit, offset)
     .then((articles) => {
       res.status(200).send({ articles });
     })

@@ -46,14 +46,14 @@ describe("GET /api/", () => {
 });
 
 describe("GET /api/articles", () => {
-  it("200: should respond with an array of all articles in descending order by date as default", () => {
+  it("200: should respond with an array of articles in descending order by date as default", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
         expect(articles).toBeSortedBy("created_at", { descending: true });
-        expect(articles).toHaveLength(13);
+        expect(articles).toHaveLength(10);
         articles.forEach((article) => {
           expect(article).not.toHaveProperty("body");
           expect(article).toHaveProperty("author");
@@ -73,7 +73,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toHaveLength(13);
+        expect(articles).toHaveLength(10);
         expect(articles).toBeSortedBy("author", { ascending: true });
       });
   });
@@ -83,7 +83,7 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toHaveLength(12);
+        expect(articles).toHaveLength(10);
         articles.forEach((article) => {
           expect(article.topic).toBe("mitch");
         });

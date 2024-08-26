@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
+const { pagination } = require("./middleware/pagination");
+
 const { getTopics } = require("./controllers/topics.controllers");
 
 const { getApiInfo } = require("./controllers/api.controllers");
@@ -24,7 +26,7 @@ const {
   handleCustomErrors,
   handleServerErrors,
   handleFalseEndpoints,
-} = require("./middleware/error-handling");
+} = require("./errors/error-handling");
 
 const app = express();
 
@@ -38,7 +40,7 @@ app.get("/api/users", getUsers);
 
 app.get("/api/topics", getTopics);
 
-app.get("/api/articles", getArticles);
+app.get("/api/articles", pagination, getArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 
